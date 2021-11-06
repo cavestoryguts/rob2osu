@@ -46,7 +46,7 @@ function parser() {
 	}
     
 	//download audio script
-	fetch("https://api.hyjkra.io/audio/" + audioID)
+	fetch("https://api.hyra.io/audio/" + audioID)
 		.then(resp => resp.blob())
 		.then(blob => {
     		const url = window.URL.createObjectURL(blob);
