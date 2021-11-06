@@ -46,7 +46,7 @@ function parser() {
 	}
     
 	//download audio script
-	fetch("https://api.hyra.io/audio/" + audioID)
+	fetch("https://api.hyjkra.io/audio/" + audioID)
 		.then(resp => resp.blob())
 		.then(blob => {
     		const url = window.URL.createObjectURL(blob);
@@ -60,6 +60,7 @@ function parser() {
     		window.URL.revokeObjectURL(url);
     		//button function
 			document.getElementById("convertButton").innerHTML= "Done!";
+            document.getElementById("instructions").innerHTML= "Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it.";
     		setTimeout(function() {
     			document.getElementById("convertButton").innerHTML = "Convert!";
     		}, 1000);
@@ -156,7 +157,7 @@ SliderTickRate:1
             <br/><button id="convertButton" onclick="parser()">Convert!</button><br/><br/><br/><br/>  
             
 			<textarea id="out" style="width:1000px;height:200px" readonly>osu! output</textarea>
-			<p id="instructions">Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it.</p>
+			<p id="instructions"></p>
 
        </div>
 </body>
