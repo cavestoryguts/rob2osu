@@ -59,12 +59,11 @@ function parser() {
     		window.URL.revokeObjectURL(url);
     		//button function
 			document.getElementById("convertButton").innerHTML= "Done!";
-            document.getElementById("instructions").innerHTML= "Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it.";
+           	document.getElementById("instructions").innerHTML= "Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it. Make sure the audio name is \"audio.mp3\".";
     		setTimeout(function() {
     			document.getElementById("convertButton").innerHTML = "Convert!";
     		}, 1000);
-   			// alert('your file has downloaded!'); // or you know, something with better UX...
-  		})
+  	})
 	.catch(() => alert("Audio downloading failed."));
 	setTimeout(function() {
 		document.getElementById("convertButton").innerHTML = "Convert!";
