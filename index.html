@@ -9,15 +9,38 @@
 
 function parser() {
 
+document.getElementById("convertButton").innerHTML= "Downloading audio...";
+
+//download audio script
+fetch("https://api.hyrda.io/audio/" + "7288438842")
+	.then(resp => resp.blob())
+	.then(blob => {
+    	const url = window.URL.createObjectURL(blob);
+    	const a = document.createElement('a');
+    	a.style.display = 'none';
+    	a.href = url;
+    	// the filename you want
+   		a.download = 'audio.mp3';
+   	 	document.body.appendChild(a);
+   	 	a.click();
+    	window.URL.revokeObjectURL(url);
+    	//button function
+		document.getElementById("convertButton").innerHTML= "Done!";
+    	setTimeout(function() {
+    		document.getElementById("convertButton").innerHTML = "Convert!";
+    	}, 1000);
+   		// alert('your file has downloaded!'); // or you know, something with better UX...
+  	})
+.catch(() => alert("Audio downloading failed."));
+setTimeout(function() {
+	document.getElementById("convertButton").innerHTML = "Convert!";
+}, 1000);
+
 	//make the string blank before the variables realize
     document.getElementById("out").value = "";
     
-   	//button function
-	document.getElementById("convertButton").innerHTML= "Done!";
-    setTimeout(function() {
-    	document.getElementById("convertButton").innerHTML = "Convert!";
-    }, 1000);
-        
+
+
 	//robeats input variables
 	let str = document.getElementById("in").value;
     const array = str.split("\n"); 
@@ -108,7 +131,7 @@ SliderTickRate:1
       
 		if (note[0] == "v2") { //v2 variables
 
-   		time = array[i].match(/(?<=\()(.*?)(?=\,)/)[0] * 1;
+   			time = array[i].match(/(?<=\()(.*?)(?=\,)/)[0] * 1;
     		lane = array[i].match(/(?<= )(.*?)(?=\,)/)[0] * 128-64; 
     		length = array[i].match(/(?<= \d, )(.*?)(?=\))/)[0] * 1;
     		tail = time + length;
@@ -128,16 +151,14 @@ SliderTickRate:1
 
 </script>
 <a href="https://github.com/spotco/RobeatsWebConvert2">Source</a><br/>
-	<div><textarea id="in" name="textarea1" style="width:1000px;height:200px">paste robeats script here</textarea>
+	   <div>
+            <textarea id="in" name="textarea1" style="width:1000px;height:200px">paste robeats code here</textarea>
 
-	<br/><button id="convertButton" onclick="parser()">Convert!</button><br/><br/><br/><br/>  
+            <br/><button id="convertButton" onclick="parser()">Convert!</button><br/><br/><br/><br/>  
             
-	<textarea id="out" style="width:1000px;height:200px" readonly>osu! output</textarea>
-	<p id="instructions">Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it.</p>
-		<a href="https://api.hyra.io/audio/7288438842" download>no .mp3, download</a>
-            <a href="https://api.hyra.io/audio/7288438842.mp3" download>.mp3, download</a>
-            <a href="https://api.hyra.io/audio/7288438842.mp3" >.mp3, no-download</a>
-            <a href="https://api.hyra.io/audio/7288438842">no .mp3, no-download</a>
-	</div>
+			<textarea id="out" style="width:1000px;height:200px" readonly>osu! output</textarea>
+			<p id="instructions">Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it.</p>
+
+       </div>
 </body>
 </html>
