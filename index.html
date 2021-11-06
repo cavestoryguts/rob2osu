@@ -9,37 +9,10 @@
 
 function parser() {
 
-document.getElementById("convertButton").innerHTML= "Downloading audio...";
-
-//download audio script
-fetch("https://api.hyrda.io/audio/" + "7288438842")
-	.then(resp => resp.blob())
-	.then(blob => {
-    	const url = window.URL.createObjectURL(blob);
-    	const a = document.createElement('a');
-    	a.style.display = 'none';
-    	a.href = url;
-    	// the filename you want
-   		a.download = 'audio.mp3';
-   	 	document.body.appendChild(a);
-   	 	a.click();
-    	window.URL.revokeObjectURL(url);
-    	//button function
-		document.getElementById("convertButton").innerHTML= "Done!";
-    	setTimeout(function() {
-    		document.getElementById("convertButton").innerHTML = "Convert!";
-    	}, 1000);
-   		// alert('your file has downloaded!'); // or you know, something with better UX...
-  	})
-.catch(() => alert("Audio downloading failed."));
-setTimeout(function() {
-	document.getElementById("convertButton").innerHTML = "Convert!";
-}, 1000);
+	document.getElementById("convertButton").innerHTML= "Downloading audio...";
 
 	//make the string blank before the variables realize
     document.getElementById("out").value = "";
-    
-
 
 	//robeats input variables
 	let str = document.getElementById("in").value;
@@ -59,6 +32,7 @@ setTimeout(function() {
     beatLength = array[end+2].match(/(?<=BeatLength = )(.*?)(?=$)/)[0] * 1,
   
     //metadata variables
+    audioID = array[1].match(/(?<=\/\/)(.*?)(?=")/)[0],
 	title = array[2].match(/(?<=")(.*?)(?= \()/)[0],
 	artist = array[5].match(/(?<=")(.*?)(?=")/)[0],
 	audioMod = array[10].match(/(?<== )(.*?)(?=,)/)[0],
@@ -70,7 +44,32 @@ setTimeout(function() {
   		case 1: audioMod = "Hard"; break;
     	case 2: audioMod = "Easy"; break;
 	}
-
+    
+	//download audio script
+	fetch("https://api.hyra.io/audio/" + audioID)
+		.then(resp => resp.blob())
+		.then(blob => {
+    		const url = window.URL.createObjectURL(blob);
+    		const a = document.createElement('a');
+    		a.style.display = 'none';
+    		a.href = url;
+    		// the filename you want
+   			a.download = 'audio.mp3';
+   	 		document.body.appendChild(a);
+   	 		a.click();
+    		window.URL.revokeObjectURL(url);
+    		//button function
+			document.getElementById("convertButton").innerHTML= "Done!";
+    		setTimeout(function() {
+    			document.getElementById("convertButton").innerHTML = "Convert!";
+    		}, 1000);
+   			// alert('your file has downloaded!'); // or you know, something with better UX...
+  		})
+	.catch(() => alert("Audio downloading failed."));
+	setTimeout(function() {
+		document.getElementById("convertButton").innerHTML = "Convert!";
+    }, 5000);
+    
 	document.getElementById("out").value =
 `osu file format v14
 
