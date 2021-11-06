@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ASCII">
 <title>RoBeats to osu! Converter (robeats2osu)</title>
 </head>
 <body> 
@@ -32,21 +31,21 @@ function parser() {
     beatLength = array[end+2].match(/(?<=BeatLength = )(.*?)(?=$)/)[0] * 1,
   
     //metadata variables
-    audioID = array[1].match(/(?<=\/\/)(.*?)(?=")/)[0],
+    audioID = array[1].match(/(?<=\/\/)(.*?)(?=")/)[0] * 1,
 	title = array[2].match(/(?<=")(.*?)(?= \()/)[0],
 	artist = array[5].match(/(?<=")(.*?)(?=")/)[0],
-	audioMod = array[10].match(/(?<== )(.*?)(?=,)/)[0],
-	difficulty = array[6].match(/(?<== )(.*?)(?=,)/)[0],
+	audioMod = array[10].match(/(?<== )(.*?)(?=,)/)[0] * 1,
+	difficulty = array[6].match(/(?<== )(.*?)(?=,)/)[0] * 1,
 	creator = "RoBeatsConverter";
 
 	switch(audioMod) {
-		default: audioMod = "Normal"; break;
+        default: audioMod = "Normal"; break;
   		case 1: audioMod = "Hard"; break;
     	case 2: audioMod = "Easy"; break;
 	}
     
 	//download audio script
-	fetch("https://api.hyra.io/audio/" + audioID)
+	fetch("https://api.hyjkra.io/audio/" + audioID)
 		.then(resp => resp.blob())
 		.then(blob => {
     		const url = window.URL.createObjectURL(blob);
@@ -152,7 +151,7 @@ SliderTickRate:1
 </script>
 <a href="https://github.com/spotco/RobeatsWebConvert2">Source</a><br/>
 	   <div>
-            <textarea id="in" name="textarea1" style="width:1000px;height:200px">paste robeats code here</textarea>
+            <textarea id="in" name="textarea1" style="width:1000px;height:200px"></textarea>
 
             <br/><button id="convertButton" onclick="parser()">Convert!</button><br/><br/><br/><br/>  
             
