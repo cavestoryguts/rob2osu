@@ -27,9 +27,11 @@ function parser() {
     }
     
     //timing point variables 
-    let timingPointTime = array[end+1].match(/(?<=Time = )(.*?)(?=\,)/)[0] * 1,
+    
+	let count = (str.match(/BeatLength/g) || []).length,
+    timingPointTime = array[end+1].match(/(?<=Time = )(.*?)(?=\,)/)[0] * 1,
     beatLength = array[end+2].match(/(?<=BeatLength = )(.*?)(?=$)/)[0] * 1,
-  
+    
     //metadata variables
     audioID = array[1].match(/(?<=\/\/)(.*?)(?=")/)[0] * 1,
 	title = array[2].match(/(?<=")(.*?)(?= \()/)[0],
@@ -53,13 +55,13 @@ function parser() {
     		a.style.display = 'none';
     		a.href = url;
     		// the filename you want
-   			a.download = 'audio.mp3';
+   			a.download = audioID + ".mp3";
    	 		document.body.appendChild(a);
    	 		a.click();
     		window.URL.revokeObjectURL(url);
     		//button function
 			document.getElementById("convertButton").innerHTML= "Done!";
-           	document.getElementById("instructions").innerHTML= "Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it. Make sure the audio name is \"audio.mp3\".";
+           	document.getElementById("instructions").innerHTML= "Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it.";
     		setTimeout(function() {
     			document.getElementById("convertButton").innerHTML = "Convert!";
     		}, 1000);
@@ -67,13 +69,14 @@ function parser() {
 	.catch(() => alert("Audio downloading failed."));
 	setTimeout(function() {
 		document.getElementById("convertButton").innerHTML = "Convert!";
-    }, 5000);
+    }, 4000);
     
 	document.getElementById("out").value =
 `osu file format v14
 
 [General]
-AudioFilename: audio.mp3
+AudioFilename: `.concat(audioID,".mp3") +
+`
 AudioLeadIn: 0
 PreviewTime: -1
 Countdown: 0
@@ -98,7 +101,7 @@ BeatmapID:0
 BeatmapSetID:-1
 
 [Difficulty]
-HPDrainRate:5
+HPDrainRate:0
 CircleSize:4
 OverallDifficulty:5
 ApproachRate:5
@@ -116,10 +119,17 @@ SliderTickRate:1
 //Storyboard Sound Samples
 
 [TimingPoints]
-`.concat(timingPointTime,",",beatLength,",4,3,0,30,1,0 \n\n\n") + 
-`[HitObjects]
-`;
+`
+//timing point loop
+for (let i = 0; i < count; i++) {
+
+    timingPointTime = array[end+1+(i*3)].match(/(?<=Time = )(.*?)(?=\,)/)[0];
+    beatLength = array[end+2+(i*3)].match(/(?<=BeatLength = )(.*?)(?=$)/)[0];
+    document.getElementById("out").value += "".concat(timingPointTime,",",beatLength,",4,3,0,30,1,0\n");
     
+}
+
+document.getElementById("out").value += "\n\n[HitObjects]\n";
 
 	//note parser loop
 	for (let i = start; i <= array.length; i++) {
@@ -150,7 +160,7 @@ SliderTickRate:1
 </script>
 <a href="https://github.com/spotco/RobeatsWebConvert2">Source</a><br/>
 	   <div>
-            <textarea id="in" name="textarea1" style="width:1000px;height:200px">paste robeats code here</textarea>
+            <textarea id="in" name="textarea1" style="width:1000px;height:200px">paste robeats script here</textarea>
 
             <br/><button id="convertButton" onclick="parser()">Convert!</button><br/><br/><br/><br/>  
             
