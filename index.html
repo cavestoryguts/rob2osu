@@ -46,6 +46,8 @@ function parser() {
     	case 2: audioMod = "Easy"; break;
 	}
     
+	//audio downloading doesn't work as of march 22nd roblox audio update
+	/*
 	//download audio script
 	fetch("https://api.hyra.io/audio/" + audioID)
 		.then(resp => resp.blob())
@@ -70,6 +72,8 @@ function parser() {
 	setTimeout(function() {
 		document.getElementById("convertButton").innerHTML = "Convert!";
     }, 4000);
+	*/
+	
     
 	document.getElementById("out").value =
 `osu file format v14
