@@ -1,1 +1,2 @@
-# robeats2osu
+# rob2osu
+converter for blocky rhythm game
