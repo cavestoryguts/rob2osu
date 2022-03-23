@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RoBeats to osu! Converter</title>
+</head>
+<body> 
+<script>
+
+function parser() {
+
+	document.getElementById("convertButton").innerHTML= "Downloading audio...";
+
+	//make the string blank before the variables realize
+    document.getElementById("out").value = "";
+
+	//robeats input variables
+	let str = document.getElementById("in").value;
+    const array = str.split("\n"); 
+
+	//note section variables
+    var start, end = start = 0;
+    while (array[start].match(/\);/) != ");") {
+    	start++;
+    }
+    while (array[end].match(/TimingPoints/) != "TimingPoints") {
+    	end++;
+    }
+    
+    //timing point variables 
+    
+	let count = (str.match(/BeatLength/g) || []).length,
+    timingPointTime = array[end+1].match(/(?<=Time = )(.*?)(?=\,)/)[0] * 1,
+    beatLength = array[end+2].match(/(?<=BeatLength = )(.*?)(?=$)/)[0] * 1,
+    
+    //metadata variables
+    audioID = array[1].match(/(?<=\/\/)(.*?)(?=")/)[0] * 1,
+	title = array[2].match(/(?<=")(.*?)(?= \()/)[0],
+	artist = array[5].match(/(?<=")(.*?)(?=")/)[0],
+	audioMod = array[10].match(/(?<== )(.*?)(?=,)/)[0] * 1,
+	difficulty = array[6].match(/(?<== )(.*?)(?=,)/)[0] * 1,
+	creator = "RobeatsArchive";
+
+	switch(audioMod) {
+        default: audioMod = "Normal"; break;
+  		case 1: audioMod = "Hard"; break;
+    	case 2: audioMod = "Easy"; break;
+	}
+    
+	//audio downloading doesn't work as of march 22nd roblox audio update
+	
+	//download audio script
+	
+	fetch("https://api.hyra.io/audio/" + audioID)
+		.then(resp => resp.blob())
+		.then(blob => {
+    		const url = window.URL.createObjectURL(blob);
+    		const a = document.createElement('a');
+    		a.style.display = 'none';
+    		a.href = url;
+    		// the filename you want
+   			a.download = audioID + ".mp3";
+   	 		document.body.appendChild(a);
+   	 		a.click();
+    		window.URL.revokeObjectURL(url);
+		
+    		//button function
+			document.getElementById("convertButton").innerHTML= "Done!";
+           	document.getElementById("instructions").innerHTML= "Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it.";
+    		setTimeout(function() {
+    			document.getElementById("convertButton").innerHTML = "Convert!";
+    		}, 1000);
+  	})
+	.catch(() => alert("Audio downloading failed."));
+	setTimeout(function() {
+		document.getElementById("convertButton").innerHTML = "Convert!";
+    }, 4000);
+	
+	
+    
+	document.getElementById("out").value =
+`osu file format v14
+[General]
+AudioFilename: `.concat(audioID,".mp3") +
+`
+AudioLeadIn: 0
+PreviewTime: -1
+Countdown: 0
+SampleSet: Drum
+StackLeniency: 0.7
+Mode: 3
+LetterboxInBreaks: 0
+SpecialStyle: 0
+WidescreenStoryboard: 0
+[Editor]
+DistanceSpacing: 1
+BeatDivisor: 4
+GridSize: 8
+TimelineZoom: 2  
+[Metadata]
+`.concat("Title:",title,"\n","TitleUnicode:",title,"\n","Artist:",artist,"\n","ArtistUnicode:",artist,"\n","Creator:",creator,"\n","Version:",audioMod," [",difficulty,"] \n") + 
+`Source:
+Tags:
+BeatmapID:0
+BeatmapSetID:-1
+[Difficulty]
+HPDrainRate:0
+CircleSize:4
+OverallDifficulty:8.5
+ApproachRate:5
+SliderMultiplier:1.4
+SliderTickRate:1
+[Events]
+//Background and Video events
+//Break Periods
+//Storyboard Layer 0 (Background)
+//Storyboard Layer 1 (Fail)
+//Storyboard Layer 2 (Pass)
+//Storyboard Layer 3 (Foreground)
+//Storyboard Layer 4 (Overlay)
+//Storyboard Sound Samples
+[TimingPoints]
+`
+//timing point loop
+for (let i = 0; i < count; i++) {
+
+    timingPointTime = array[end+1+(i*3)].match(/(?<=Time = )(.*?)(?=\,)/)[0];
+    beatLength = array[end+2+(i*3)].match(/(?<=BeatLength = )(.*?)(?=$)/)[0];
+    document.getElementById("out").value += "".concat(timingPointTime,",",beatLength,",4,3,0,30,1,0\n");
+    
+}
+
+document.getElementById("out").value += "\n\n[HitObjects]\n";
+
+	//note parser loop
+	for (let i = start; i <= array.length; i++) {
+
+		let note, time, lane, test, length, tail;
+		note = array[i].match(/v\d/); //v1 or v2
+      
+		if (note[0] == "v2") { //v2 variables
+
+   			time = array[i].match(/(?<=\()(.*?)(?=\,)/)[0] * 1;
+    		lane = array[i].match(/(?<= )(.*?)(?=\,)/)[0] * 128-64; 
+    		length = array[i].match(/(?<= \d, )(.*?)(?=\))/)[0] * 1;
+    		tail = time + length;
+
+			document.getElementById("out").value += "".concat(lane,",192,",time,",128,0,",tail,":0:0:0:0:\n");
+    
+		} else {
+    
+    		time = array[i].match(/(?<=\()(.*?)(?=\,)/)[0] * 1;
+    		lane = array[i].match(/(?<= )(.*?)(?=\))/)[0] * 128-64;
+
+			document.getElementById("out").value += "".concat(lane,",192,",time,",1,","0,0:0:0:0:\n");
+			
+  		}
+	}
+}
+
+</script>
+<a href="https://github.com/cavestoryguts/rob2osu">https://github.com/cavestoryguts/rob2osu</a><br/>
+	   <div>
+            <textarea id="in" name="textarea1" style="width:1000px;height:200px">
+local u1 = {
+	AudioAssetId = "rbxassetid://7675919646", 
+	AudioFilename = "Splatter Party", 
+	AudioDescription = "'Let's get this party started.' Art by Ajiko. Map by doofyplayer.", 
+	AudioCoverImageAssetId = "http://www.roblox.com/asset/?id=7784982292", 
+	AudioArtist = "Camellia", 
+	AudioDifficulty = 16, 
+	AudioTimeOffset = -75, 
+	AudioVolume = 0.5, 
+	AudioNotePrebufferTime = 1250, 
+	AudioMod = 0, 
+	AudioHitSFXGroup = 0, 
+	FusionResult = "CAMESplatterPartyHalloween2", 
+	HitObjects = {}
+};
+local function v1(p1, p2)
+	u1.HitObjects[#u1.HitObjects + 1] = {
+		Time = p1, 
+		Type = 1, 
+		Track = p2
+	};
+end;
+local function v2(p3, p4, p5)
+	u1.HitObjects[#u1.HitObjects + 1] = {
+		Time = p3, 
+		Type = 2, 
+		Track = p4, 
+		Duration = p5
+	};
+end;
+v1(113, 4);
+u1.TimingPoints = { {
+	Time = 113, 
+	BeatLength = 555.555555555556
+} };
+return u1;</textarea>
+
+            <br/><button id="convertButton" onclick="parser()">Convert!</button><br/><br/><br/><br/>  
+            
+			<textarea id="out" style="width:1000px;height:200px" readonly>osu! output</textarea>
+			<p id="instructions"></p>
+
+       </div>
+</body>
+</html>
