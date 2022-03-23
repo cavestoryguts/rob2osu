@@ -50,7 +50,7 @@ function parser() {
 	
 	//download audio script
 	
-	fetch("https://api.hyraaaaaaaaaaaa.io/audio/" + audioID)
+	fetch("https://api.hyra.io/audio/" + audioID)
 		.then(resp => resp.blob())
 		.then(blob => {
     		const url = window.URL.createObjectURL(blob);
@@ -164,9 +164,9 @@ document.getElementById("out").value += "\n\n[HitObjects]\n";
 }
 
 </script>
-<a href="https://github.com/spotco/RobeatsWebConvert2">Source</a><br/>
+<a href="https://github.com/cavestoryguts/rob2osu">https://github.com/cavestoryguts/rob2osu</a><br/>
 	   <div>
-            <textarea id="in" name="textarea1" style="width:1000px;height:200px">paste robeats script here v2</textarea>
+            <textarea id="in" name="textarea1" style="width:1000px;height:200px">paste robeats script here</textarea>
 
             <br/><button id="convertButton" onclick="parser()">Convert!</button><br/><br/><br/><br/>  
             
