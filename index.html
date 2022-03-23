@@ -8,7 +8,8 @@
 
 function parser() {
 
-	document.getElementById("convertButton").innerHTML= "Downloading audio...";
+	//document.getElementById("convertButton").innerHTML= "Downloading audio...";
+    document.getElementById("convertButton").innerHTML= "Done!";
 
 	//make the string blank before the variables realize
     document.getElementById("out").value = "";
@@ -72,10 +73,10 @@ function parser() {
     			document.getElementById("convertButton").innerHTML = "Convert!";
     		}, 1000);
   	})
-	.catch(() => alert("Audio downloading failed."));
+	//.catch(() => alert("Audio downloading failed."));
 	setTimeout(function() {
 		document.getElementById("convertButton").innerHTML = "Convert!";
-    }, 4000);
+    }, 1000);
 	
 	
     
@@ -159,6 +160,7 @@ document.getElementById("out").value += "\n\n[HitObjects]\n";
 	}
 }
 
+//special thanks to RegExr, it was the real mvp during the making of this project
 </script>
 <a href="https://github.com/cavestoryguts/rob2osu">https://github.com/cavestoryguts/rob2osu</a><br/>
 	   <div>
