@@ -40,14 +40,13 @@ function parser() {
 	audioMod = array[10].match(/(?<== )(.*?)(?=,)/)[0] * 1,
 	difficulty = array[6].match(/(?<== )(.*?)(?=,)/)[0] * 1,
 	creator = "RobeatsArchive";
-
-	switch(audioMod) {
-        case 0: audioMod = "Normal"; title = array[2].match(/(?<=")(.*?)(?=")/)[0]; break;
-        case 1: audioMod = "Hard"; title = array[2].match(/(?<=")(.*?)(?= \()/)[0]; break;
-    	case 2: audioMod = "Easy"; title = array[2].match(/(?<=")(.*?)(?= \()/)[0]; break;
-	}
     
     //let's just say this took a while
+	switch(audioMod) {
+        case 0: audioMod = "Normal"; title = array[2].match(/(?<=")(.*?)(?=")/)[0]; break;
+        case 1: audioMod = "Hard"; title = array[2].match(/(?<=")(.*?)(?= \(Hard\))/)[0]; break;
+    	case 2: audioMod = "Easy"; title = array[2].match(/(?<=")(.*?)(?= \(Easy\))/)[0]; break;
+	}
 
 	//audio downloading doesn't work as of march 22nd roblox audio update
 	
@@ -65,22 +64,23 @@ function parser() {
    	 		document.body.appendChild(a);
    	 		a.click();
     		window.URL.revokeObjectURL(url);
-		
-    		//button function
-			document.getElementById("convertButton").innerHTML= "Done!";
-           	document.getElementById("instructions").innerHTML= "Make a new folder and make a .osu file (with any name) and the audio you just downloaded in it.";
-    		setTimeout(function() {
-    			document.getElementById("convertButton").innerHTML = "Convert!";
-    		}, 1000);
+            // if audio works again cut and paste button function here
   	})
-	//.catch(() => alert("Audio downloading failed."));
+    /*
+	.catch(() => alert("Audio downloading failed."));
 	setTimeout(function() {
 		document.getElementById("convertButton").innerHTML = "Convert!";
     }, 1000);
-	
-	
+	*/
     
-	document.getElementById("out").value =
+    //button function
+	document.getElementById("convertButton").innerHTML= "Done!";
+    document.getElementById("instructions").innerHTML= "Make a new folder and make a .osu file (with any name) and insert your audio into it. To get audio you have to use means other than downloading from the Roblox website because of the March 22nd update breaking downloading of audios.";
+    setTimeout(function() {
+    	document.getElementById("convertButton").innerHTML = "Convert!";
+    }, 1000);
+    
+document.getElementById("out").value =
 `osu file format v14
 [General]
 AudioFilename: `.concat(audioID,".mp3") +
@@ -164,11 +164,12 @@ document.getElementById("out").value += "\n\n[HitObjects]\n";
 </script>
 <a href="https://github.com/cavestoryguts/rob2osu">https://github.com/cavestoryguts/rob2osu</a><br/>
 	   <div>
-            <textarea id="in" name="textarea1" style="width:1000px;height:200px">paste the contents of your robeats map script here</textarea>
+            <textarea id="in" name="textarea1" style="width:1000px;height:200px">Paste the contents of your RoBeats map script here!
+</textarea>
 
             <br/><button id="convertButton" onclick="parser()">Convert!</button><br/><br/><br/><br/>  
             
-			<textarea id="out" style="width:1000px;height:200px" readonly>osu output</textarea>
+			<textarea id="out" style="width:1000px;height:400px" readonly>osu! output</textarea>
 			<p id="instructions"></p>
 
        </div>
