@@ -39,7 +39,15 @@ function parser() {
 	artist = array[5].match(/(?<=")(.*?)(?=")/)[0],
 	audioMod = array[10].match(/(?<== )(.*?)(?=,)/)[0] * 1,
 	difficulty = array[6].match(/(?<== )(.*?)(?=,)/)[0] * 1,
+    mapper = array[3].match(/(?<=Map by )(.*?)(?=\.?",)/),
 	creator = "RobeatsArchive";
+
+	
+	if (mapper == null) {
+    	mapper = "";
+    } else {
+   		mapper = "".concat(" by ",array[3].match(/(?<=Map by )(.*?)(?=\.?",)/)[0]);
+    }
     
     //let's just say this took a while
 	switch(audioMod) {
@@ -100,7 +108,7 @@ BeatDivisor: 4
 GridSize: 8
 TimelineZoom: 2  
 [Metadata]
-`.concat("Title:",title,"\n","TitleUnicode:",title,"\n","Artist:",artist,"\n","ArtistUnicode:",artist,"\n","Creator:",creator,"\n","Version:",audioMod," [",difficulty,"] \n") + 
+`.concat("Title:",title,"\n","TitleUnicode:",title,"\n","Artist:",artist,"\n","ArtistUnicode:",artist,"\n","Creator:",creator,"\n","Version:",audioMod," [",difficulty,"]",mapper,"\n") + 
 `Source:
 Tags:
 BeatmapID:0
